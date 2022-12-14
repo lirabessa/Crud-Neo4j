@@ -1,11 +1,6 @@
 #Criar
 
-def criarCompra(self):
-        with self.driver.session(database="neo4j") as session:
-            session.execute_write(self._criarCompra)
-
-@staticmethod
-def _criarCompra(db):
+def criarCompra(db):
     query = ("CREATE (object: compra {id: $idComp, status: $statusComp, formaPagamento: $formaPagamentoComp, precoTotal: $precoTotal, produto: $nomeProd, quantidade: $quantComp, vendedor: $cnpjVend, usuario: $cpfUsu})")
 
     idComp = input("ID da compra: ")
@@ -25,36 +20,19 @@ def _criarCompra(db):
     print("Compra criada com sucesso!")
     return [{"object": row["object"]["id"]["status"]["formaPagamento"]["precoTotal"]["produto"]["quantidade"]["vendedor"]["usuario"]} for row in result]
 
-
-#Buscar
-def buscarCompras(self):
-    with self.driver.session(database="neo4j") as session:
-        session.read_transaction(self._buscarCompras)
-
-@staticmethod
-def _buscarCompras(db):
+def buscarCompras(db):
     query = "MATCH (c:compra) RETURN c"
     result = db.run(query)
     return [print([row]) for row in result]
 
-def buscarCompra(self):
-        with self.driver.session(database="neo4j") as session:
-            session.read_transaction(self._buscarCompra)
-    
-@staticmethod
-def _buscarCompra(db):
+def buscarCompra(db):
     idCompra = input("Insira o ID da compra que deseja encontrar: ")
     query = "MATCH (c:compra) WHERE c.id = $idCompra RETURN c"
     result = db.run(query, idCompra=idCompra)
     return [print([row]) for row in result]
 
 #Atualozar
-def atualizarCompra(self):
-        with self.driver.session(database="neo4j") as session:
-            session.execute_write(self._atualizarCompra)
-
-@staticmethod
-def _atualizarCompra(db):
+def atualizarCompra(db):
     idCompra = input("Insira o ID da compra que deseja atualizar: ")
 
     new= input("Insira o novo valor: ")
@@ -65,14 +43,9 @@ def _atualizarCompra(db):
 
     db.run(query, idCompra=idCompra, new=new)
 
-#Deletar
-    def deletarCompra(self):
-        with self.driver.session(database="neo4j") as session:
-            session.write_transaction(self._deletarCompra)
 
-    @staticmethod
-    def _deletarCompra(db):
-        idCompra = input("Insira o ID da compra a ser deletado: ")
-        query = "MATCH (c:compra) WHERE c.id = $idCompra DETACH DELETE c"
-        print("Compra deletada com sucesso")
-        db.run(query, idCompra=idCompra)
+def deletarCompra(db):
+    idCompra = input("Insira o ID da compra a ser deletado: ")
+    query = "MATCH (c:compra) WHERE c.id = $idCompra DETACH DELETE c"
+    print("Compra deletada com sucesso")
+    db.run(query, idCompra=idCompra)

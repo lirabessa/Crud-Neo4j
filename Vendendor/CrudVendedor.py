@@ -1,11 +1,6 @@
 #Criar
 
-def vendedor(self):
-        with self.driver.session(database="neo4j") as session:
-            session.execute_write(self._criarVend)
-
-@staticmethod
-def _criarVend(db):
+def vendedor(db):
     query = ("CREATE (object: vendedor {nome: $nomeVend, email: $emailVend, cnpj: $cnpjVend, estado: $estadoVend, cidade: $cidadeVend, rua: $ruaVend, numero: $numeroVend})")
 
     nomeVend = input("Nome: ")
@@ -23,22 +18,13 @@ def _criarVend(db):
     return [{"object": row["object"]["nome"]["email"]["cnpj"]["estado"]["cidade"]["rua"]["numero"]} for row in result]
 
 #Buscar
-def buscarVendedores(self):
-    with self.driver.session(database="neo4j") as session:
-        session.read_transaction(self._buscarVendedores)
 
-@staticmethod
-def _buscarVendedores(db):
+def buscarVendedores(db):
     query = "MATCH (v:vendedor) RETURN v"
     result = db.run(query)
     return [print([row]) for row in result]
 
-def buscarVendedor(self):
-    with self.driver.session(database="neo4j") as session:
-        session.read_transaction(self._buscarVendedor)
-
-@staticmethod
-def _buscarVendedor(db):
+def buscarVendedor(db):
     cnpjVend = input("Insira o CNPJ do vendedor que deseja encontrar: ")
     query = "MATCH (v:vendedor) WHERE v.cnpj = $cnpjVend RETURN v"
     result = db.run(query, cnpjVend=cnpjVend)
@@ -46,12 +32,7 @@ def _buscarVendedor(db):
 
 #Atualizar
 
-def atualizarVendedor(self):
-        with self.driver.session(database="neo4j") as session:
-            session.execute_write(self._atualizarVendedor)
-
-@staticmethod
-def _atualizarVendedor(db):
+def atualizarVendedor(db):
     cnpjVend = input("Insira o CNPJ do vendedor que deseja atualizar: ")
 
     print('''
@@ -87,13 +68,10 @@ def _atualizarVendedor(db):
     db.run(query, cnpjVend=cnpjVend, option=option, new=new)
 
     #deletar
-    def deletarVendedor(self):
-        with self.driver.session(database="neo4j") as session:
-            session.write_transaction(self._deletarVendedor)
 
-    @staticmethod
-    def _deletarVendedor(db):
-        cnpjVend = input("Insira o CNPJ do vendedor a ser deletado: ")
-        query = "MATCH (v:vendedor) WHERE v.cnpj = $cnpjVend DETACH DELETE v"
-        print("Vendedor deletado com sucesso")
-        db.run(query, cnpjVend=cnpjVend)
+
+def deletarVendedor(db):
+    cnpjVend = input("Insira o CNPJ do vendedor a ser deletado: ")
+    query = "MATCH (v:vendedor) WHERE v.cnpj = $cnpjVend DETACH DELETE v"
+    print("Vendedor deletado com sucesso")
+    db.run(query, cnpjVend=cnpjVend)

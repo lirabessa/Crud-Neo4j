@@ -1,24 +1,45 @@
 from neo4j import GraphDatabase
 import logging
 from neo4j.exceptions import ServiceUnavailable
+import Usuario.CrudUsuario as criarUsuario
+import Usuario.CrudUsuario as atualizarUsuario
+import Usuario.CrudUsuario as buscarUsuario
+import Usuario.CrudUsuario as buscarTodesUsuarios
+import Usuario.CrudUsuario as deletarUsuario
+import Produtos.CRUDprod as atualizarProduto
+import Produtos.CRUDprod as buscarProduto
+import Produtos.CRUDprod as buscarTodesProduto
+import Produtos.CRUDprod as cadastrarProduto
+import Produtos.CRUDprod as deletarProduto
+import Vendendor.CrudVendedor as cadastrarVendedor
+import Vendendor.CrudVendedor as buscarVendedor
+import Vendendor.CrudVendedor as buscarTodesVendedor
+import Vendendor.CrudVendedor as atualizarVendedor
+import Vendendor.CrudVendedor as deletarVendedor
+import Compra.CrudCompra as cadastrarCompra
+import Compra.CrudCompra as buscarCompra
+import Compra.CrudCompra as atualizarCompra
+import Compra.CrudCompra as deletarCompra
+
 
 class App:
 
     def __init__(self, uri, user, password):
-        self.driver = GraphDatabase.driver(uri, auth=(user, password))
+        driver = GraphDatabase.driver(uri, auth=(user, password))
+        global session 
+        session = driver.session ()
 
     def close(self):
-        # Don't forget to close the driver connection when you are finished with it
+        
         self.driver.close()
 
 if __name__ == "__main__":
-    # Aura queries use an encrypted connection using the "neo4j+s" URI scheme
     uri = "neo4j+s://28b53049.databases.neo4j.io"
     user = "neo4j"
     password = "dTDdFn1aIcA3NpmBMqUac66V0VGl9nZt5GigXszWVc0"
     app = App(uri, user, password)
 
-    loop = True
+loop = True
 while loop:
     print('''  
     1 - CRUD Usuario \n 
@@ -40,15 +61,15 @@ while loop:
         
             match opcaoUsuario:
                 case '1':
-                    CrudUsuario. (meuBanquinho)
+                    criarUsuario.criarUsuario (session)
                 case '2':
-                    atualizarUsuario.atualizarUsuario(meuBanquinho)
+                    atualizarUsuario.atualizarUsuario(session)
                 case '3':
-                    buscarUsuario.procurarUsuario(meuBanquinho)
+                    buscarUsuario.buscarUsuario(session)
                 case '4':
-                    buscarUsuario.procurarTodesUsuario(meuBanquinho)
+                    buscarTodesUsuarios.buscarUsuarios(session)
                 case '5':
-                    deletarUsuario.deletarUsuario(meuBanquinho)
+                    deletarUsuario.deletarUsuario(session)
                 case '0':
                     loop = False
 
@@ -64,15 +85,15 @@ while loop:
         
             match opcaoProduto:
                 case '1':
-                    cadastrarProduto.cadastrarProduto(meuBanquinho)
+                    cadastrarProduto.criarProduto(session)
                 case '2':
-                    atualizarProduto.atualizarProduto(meuBanquinho)
+                    atualizarProduto.atualizarProduto(session)
                 case '3':
-                    buscarProduto.procurarProduto(meuBanquinho)
+                    buscarProduto.buscarProduto(session)
                 case '4':
-                    buscarProduto.procurarTodesProduto(meuBanquinho)
+                    buscarTodesProduto.buscarProdutos(session)
                 case '5':
-                    deletarProduto.deletarProduto(meuBanquinho)
+                    deletarProduto.deletarProduto(session)
                 case '0':
                     loop = False
                 
@@ -88,15 +109,15 @@ while loop:
         
             match opcaoVendedor:
                 case '1':
-                    cadastrarVendedor.cadastrarVendedor(meuBanquinho)
+                    cadastrarVendedor.vendedor(session)
                 case '2':
-                    atualizarVendedor.atualizarVendedor(meuBanquinho)
+                    atualizarVendedor.atualizarVendedor(session)
                 case '3':
-                    buscarVendedor.procurarVendedor(meuBanquinho)
+                    buscarVendedor.buscarVendedor(session)
                 case '4':
-                    buscarVendedor.procurarTodesVendedor(meuBanquinho)
+                    buscarTodesVendedor.buscarVendedores(session)
                 case '5':
-                    deletarVendedor.deletarVendedor(meuBanquinho)
+                    deletarVendedor.deletarVendedor(session)
                 case '0':
                     loop = False
         
@@ -113,17 +134,14 @@ while loop:
         
             match opcaoCompra:
                 case '1':
-                    cadastrarCompra.cadastrarCompra(meuBanquinho)
+                    cadastrarCompra.criarCompra(session)
                 case '2':
-                    atualizarCompra.atualizarCompra(meuBanquinho)
+                    atualizarCompra.atualizarCompra(session)
                 case '3':
-                    buscarCompra.procurarCompra(meuBanquinho)
+                    buscarCompra.buscarCompra(session)
                 case '4':
-                    buscarCompra.procurarTodesCompra(meuBanquinho)
+                    buscarCompra.buscarCompras(session)
                 case '5':
-                    deletarCompra.deletarCompra(meuBanquinho)
+                    deletarCompra.deletarCompra(session)
                 case '0':
                     loop = False
-        
-
-    app.close()

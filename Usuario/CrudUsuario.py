@@ -5,7 +5,6 @@ def usuario(self):
         with self.driver.session(database="neo4j") as session:
             session.execute_write(self._criarUsuario)
 
-@staticmethod
 def criarUsuario(db):
     query = ("CREATE (object: usuario {nome: $nomeUsu, email: $emailUsu, cpf: $cpfUsu, estado: $estadoUsu, cidade: $cidadeUsu, rua: $ruaUsu, numero: $numeroUsu})")
 
@@ -26,22 +25,12 @@ def criarUsuario(db):
 
 #Buscar
 
-def buscarUsuarios(self):
-    with self.driver.session(database="neo4j") as session:
-        session.read_transaction(self._buscarUsuarios)
-
-@staticmethod
-def _buscarUsuarios(db):
+def buscarUsuarios(db):
     query = "MATCH (u:usuario) RETURN u"
     result = db.run(query)
     return [print([row]) for row in result]
 
-def buscarUsuario(self):
-    with self.driver.session(database="neo4j") as session:
-        session.read_transaction(self._buscarUsuario)
-    
-@staticmethod
-def _buscarUsuario(db):
+def buscarUsuario(db):
     cpfUsu = input("Insira o CPF do usuário que deseja encontrar: ")
     query = "MATCH (u:usuario) WHERE u.cpf = $cpfUsu RETURN u"
     result = db.run(query, cpfUsu=cpfUsu)
@@ -49,12 +38,8 @@ def _buscarUsuario(db):
 
 #atualizar
 
-def atualizarUsuario(self):
-        with self.driver.session(database="neo4j") as session:
-            session.execute_write(self._atualizarUsuario)
 
-@staticmethod
-def _atualizarUsuario(db):
+def atualizarUsuario(db):
         cpfUsu = input("Insira o CPF do usuário que deseja atualizar: ")
 
         print('''
@@ -89,13 +74,8 @@ def _atualizarUsuario(db):
 
         db.run(query, cpfUsu = cpfUsu, option=option, new=new)
 
-#Deletar
-def deletarUsuario(self):
-        with self.driver.session(database="neo4j") as session:
-            session.write_transaction(self._deletarUsuario)
 
-@staticmethod
-def _deletarUsuario(db):
+def deletarUsuario(db):
         cpfUsu = input("Insira o CPF do usuário a ser deletado: ")
         query = "MATCH (u:usuario) WHERE u.cpf = $cpfUsu DETACH DELETE u"
         print("Usuário deletado com sucesso")
